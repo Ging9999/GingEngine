@@ -30,7 +30,17 @@ public class Window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.add(canvas, BorderLayout.CENTER);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        frame.setVisible(true);
 
-
+        canvas.createBufferStrategy(2);
+        bs = canvas.getBufferStrategy();
+        g = bs.getDrawGraphics();
+    }
+    public void update(){
+        g.drawImage (image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+        bs.show();
     }
 }
