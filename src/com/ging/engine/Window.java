@@ -14,8 +14,17 @@ public class Window
     private BufferStrategy bs;
     private Graphics g;
 
+    public JFrame getFrame() {
+        return frame;
+    }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
 
+    public BufferedImage getImage() {
+        return image;
+    }
 
     public Window(GameContainer gc)
     {

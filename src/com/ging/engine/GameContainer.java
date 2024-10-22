@@ -1,10 +1,26 @@
 package com.ging.engine;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
 public class GameContainer implements Runnable
 {
 
     private Thread thread;
     private Window window;
+    private Renderer renderer;
+    private Input input;
+    private AbstractGame game;
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public void setWindow(Window window) {
+        this.window = window;
+    }
+
+
 
     private boolean running = false;
     private final double UPDATE_CAP = 1.0 / 60.0;
@@ -41,13 +57,13 @@ public class GameContainer implements Runnable
         this.title = title;
     }
 
-    private int width = 320, height = 240;
+    private int width = 1600, height = 900;
     private float scale = 1f;
     private String title = "GingEngine 1.0";
 
-    public GameContainer()
+    public GameContainer(AbstractGame game)
     {
-
+        this.game = game;
     }
 
     //Method that starts the actual computing of the game
@@ -55,12 +71,19 @@ public class GameContainer implements Runnable
     {
         window = new Window(this);
         thread = new Thread(this);
+        renderer = new Renderer(this);
+        input = new Input(this);
+
         thread.run();
     }
 
     public void stop()
     {
 
+    }
+
+    public Input getInput() {
+        return input;
     }
 
     //Method that contains the update and render loops
@@ -94,7 +117,15 @@ public class GameContainer implements Runnable
                 unprocessedTime -= UPDATE_CAP;
 
                 render = true;
+                game.update(this, (float)UPDATE_CAP);
                 //TODO: Update Game
+
+                System.out.println("X" + input.getMouseX() + " Y" + input.getMouseY());
+
+                input.update();
+
+
+
                 if(frameTime >= 1.0)
                 {
                     frameTime = 0;
@@ -106,6 +137,8 @@ public class GameContainer implements Runnable
 
             if(render)
             {
+                renderer.clear();
+                game.render(this, renderer);
                 //TODO: Render Game
                 window.update();
                 frames++;
@@ -131,11 +164,6 @@ public class GameContainer implements Runnable
 
     }
 
-    //Main method that runs on program start
-    public static void main(String[] args)
-    {
-        new GameContainer().start();
 
-    }
 
 }
